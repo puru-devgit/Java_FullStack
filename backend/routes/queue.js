@@ -83,4 +83,47 @@ router.get('/status/:orgId', auth, async (req, res) => {
   }
 });
 
+// Leave queue
+router.post('/leave/:orgId', auth, async (req, res) => {
+  try {
+    const entry = await Queue.findOne({
+      organization: req.params.orgId,
+      client: req.user.userId,
+      status: 'waiting'
+    });
+    if (!entry) return res.status(404).json({ message: 'Not in queue' });
+
+    await entry.deleteOne();
+
+    const io = req.app.get('io');
+    const queue = await Queue.find({ organization: req.params.orgId, status: 'waiting' }).sort({ joinedAt: 1 });
+    io.to(`org_${req.params.orgId}`).emit('queue_updated', { queue });
+
+    res.json({ message: 'Left queue' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get all active queues for a client
+router.get('/my-queues', auth, async (req, res) => {
+  try {
+    const entries = await Queue.find({ client: req.user.userId, status: 'waiting' }).sort({ joinedAt: 1 });
+
+    const queues = await Promise.all(entries.map(async (entry) => {
+      const org = await Organization.findById(entry.organization);
+      const position = await Queue.countDocuments({
+        organization: entry.organization,
+        status: 'waiting',
+        joinedAt: { $lt: entry.joinedAt }
+      });
+      return { orgId: entry.organization, orgName: org?.name, purpose: org?.purpose, position };
+    }));
+
+    res.json({ queues });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;

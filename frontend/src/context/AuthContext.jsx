@@ -1,25 +1,22 @@
-import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
+function getStoredUser() {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+  return {
+    token,
+    role: localStorage.getItem('role'),
+    name: localStorage.getItem('name'),
+    userId: localStorage.getItem('userId'),
+  };
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const initializedRef = useRef(false);
-
-  useEffect(() => {
-    if (initializedRef.current) return;
-    initializedRef.current = true;
-
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    const name = localStorage.getItem('name');
-    const userId = localStorage.getItem('userId');
-    if (token) setUser({ token, role, name, userId });
-    setLoading(false);
-  }, []);
+  const [user, setUser] = useState(getStoredUser);
 
   const login = (data) => {
     localStorage.setItem('token', data.token);
@@ -35,7 +32,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, loading: false }}>
       {children}
     </AuthContext.Provider>
   );
