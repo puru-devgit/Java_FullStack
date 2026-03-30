@@ -22,65 +22,67 @@ export default function Login() {
     } finally { setLoading(false); }
   };
 
-  const S = {
-    page: { minHeight: '100vh', display: 'flex', background: '#020817' },
-    left: { width: '42%', padding: 48, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderRight: '1px solid rgba(255,255,255,0.05)', position: 'relative', overflow: 'hidden' },
-    right: { flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' },
-    form: { width: '100%', maxWidth: 360 },
-    label: { display: 'block', color: '#64748b', fontSize: 11, fontWeight: 600, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' },
-    error: { display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px', borderRadius: 12, marginBottom: 24, fontSize: 13, color: '#f87171', background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.18)' },
-    check: { display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 },
-    dot: { width: 20, height: 20, borderRadius: '50%', background: 'rgba(14,165,233,0.15)', border: '1px solid rgba(14,165,233,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-    innerDot: { width: 6, height: 6, borderRadius: '50%', background: '#38bdf8' },
-  };
-
   return (
-    <div style={S.page}>
-      {/* Left panel — hidden on mobile */}
-      <div style={S.left} className="hidden lg:flex lg:flex-col">
-        <div className="orb" style={{ width: 400, height: 400, background: 'rgba(14,165,233,0.08)', top: -100, left: -100 }} />
-        <Link to="/" className="logo-text" style={{ position: 'relative', zIndex: 1 }}>Flow<span className="logo-q">Q</span></Link>
+    <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--bg)' }}>
+      {/* Left panel */}
+      <div className="hidden lg:flex" style={{ width: '44%', flexDirection: 'column', justifyContent: 'space-between', padding: 48, borderRight: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+        <div className="orb" style={{ width: 500, height: 500, background: 'rgba(59,130,246,0.07)', top: -150, left: -150 }} />
+        <Link to="/" className="logo" style={{ position: 'relative', zIndex: 1 }}>Flow<span>Q</span></Link>
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <h2 style={{ fontSize: 48, fontWeight: 900, color: 'white', lineHeight: 1.1, marginBottom: 16 }}>Welcome<br />back.</h2>
-          <p style={{ color: '#64748b', lineHeight: 1.7, marginBottom: 40, maxWidth: 280 }}>Sign in to manage your queue or check your real-time position.</p>
-          {['Real-time queue updates via WebSockets', 'Push notifications when you\'re next', 'Join multiple queues simultaneously'].map(f => (
-            <div key={f} style={S.check}>
-              <div style={S.dot}><div style={S.innerDot} /></div>
-              <span style={{ color: '#94a3b8', fontSize: 13 }}>{f}</span>
-            </div>
-          ))}
+          <h2 style={{ fontSize: 44, color: 'white', marginBottom: 16 }}>Good to<br />see you.</h2>
+          <p style={{ color: '#64748b', lineHeight: 1.7, marginBottom: 40, maxWidth: 300, fontSize: 15 }}>
+            Sign in to manage your queue or track your position in real time.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {['Real-time queue updates', 'Push notifications when you\'re next', 'Multi-queue support'].map(f => (
+              <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ width: 18, height: 18, borderRadius: '50%', background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#60a5fa' }} />
+                </div>
+                <span style={{ color: '#94a3b8', fontSize: 13 }}>{f}</span>
+              </div>
+            ))}
+          </div>
         </div>
         <p style={{ color: '#1e293b', fontSize: 12, position: 'relative', zIndex: 1 }}>© 2025 FlowQ</p>
       </div>
 
       {/* Right panel */}
-      <div style={S.right}>
-        <div style={S.form} className="fade-up">
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 24px' }}>
+        <div className="up" style={{ width: '100%', maxWidth: 360 }}>
           <div className="lg:hidden" style={{ marginBottom: 40 }}>
-            <Link to="/" className="logo-text">Flow<span className="logo-q">Q</span></Link>
+            <Link to="/" className="logo">Flow<span>Q</span></Link>
           </div>
-          <h2 style={{ fontSize: 30, fontWeight: 900, color: 'white', marginBottom: 4 }}>Sign in</h2>
-          <p style={{ color: '#64748b', fontSize: 14, marginBottom: 32 }}>
-            No account?{' '}
-            <Link to="/register" style={{ color: '#38bdf8', textDecoration: 'none' }}>Create one free</Link>
+
+          <button onClick={() => navigate(-1)} className="btn btn-ghost" style={{ fontSize: 13, padding: '6px 0', marginBottom: 24, alignSelf: 'flex-start', gap: 6 }}>
+            ← Back
+          </button>
+
+          <h2 style={{ fontSize: 28, color: 'white', marginBottom: 6 }}>Sign in</h2>
+          <p style={{ color: '#64748b', fontSize: 14, marginBottom: 28 }}>
+            Don't have an account?{' '}
+            <Link to="/register" style={{ color: '#60a5fa', textDecoration: 'none', fontWeight: 500 }}>Create one</Link>
           </p>
 
-          {error && <div style={S.error}>⚠️ {error}</div>}
+          {error && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 14px', borderRadius: 10, marginBottom: 20, fontSize: 13, color: '#fca5a5', background: 'rgba(239,68,68,0.07)', border: '1px solid rgba(239,68,68,0.18)' }}>
+              <span>⚠</span> {error}
+            </div>
+          )}
 
-          <form onSubmit={handleSubmit}>
-            <div style={{ marginBottom: 20 }}>
-              <label style={S.label}>Email address</label>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div>
+              <label className="label">Email address</label>
               <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                className="field" placeholder="you@example.com" required />
+                className="input" placeholder="you@example.com" required />
             </div>
-            <div style={{ marginBottom: 24 }}>
-              <label style={S.label}>Password</label>
+            <div>
+              <label className="label">Password</label>
               <input type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })}
-                className="field" placeholder="••••••••" required />
+                className="input" placeholder="••••••••" required />
             </div>
-            <button type="submit" disabled={loading} className="btn-primary"
-              style={{ width: '100%', padding: '14px', fontSize: 14, gap: 8 }}>
-              {loading ? <><div className="spinner" /> Signing in...</> : 'Sign In →'}
+            <button type="submit" disabled={loading} className="btn btn-blue" style={{ padding: '12px', marginTop: 4, fontSize: 14 }}>
+              {loading ? <><div className="spin" /> Signing in...</> : 'Sign in →'}
             </button>
           </form>
         </div>
