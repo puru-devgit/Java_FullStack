@@ -1,0 +1,16 @@
+export default {
+  content: ['./index.html', './src/**/*.{js,jsx}'],
+  theme: {
+    extend: {
+      colors: {
+        primary: '#0ea5e9',
+        dark: '#0f172a',
+      },
+      fontFamily: {
+        display: ['"Syne"', 'sans-serif'],
+        body: ['"DM Sans"', 'sans-serif'],
+      }
+    }
+  },
+  plugins: []
+};
